@@ -1,5 +1,5 @@
 
-//import { SignInButton } from '../SignInButton';
+import { SignInButton } from '../SignInButton';
 
 
 import styles from './styles.module.scss';
@@ -17,18 +17,17 @@ export function Header() {
                {/*  <img src="/images/logo1.svg" alt="Logo1" /> */}
                 <nav>   
                     <ActiveLink activeClassName={styles.active } href='/dashboard'>
-                        <a>Início</a>
+                        <a>Dashboard</a>
                     </ActiveLink>
-                    <ActiveLink  activeClassName={styles.active } href='/dashboard'> 
-                        <a>Testes</a>
+                    <ActiveLink  activeClassName={styles.active } href='/cadastro'> 
+                        <a>Cadastros</a>
                     </ActiveLink>
-                    <ActiveLink  activeClassName={styles.active } href='/dashboard'> 
+                 {/*    <ActiveLink  activeClassName={styles.active } href='/dashboard'> 
                         <a>Sobre</a>
-                    </ActiveLink>                     
-                    
-                   
+                    </ActiveLink>    */}       
+              
                 </nav>
-                {/* <SignInButton/> */}
+                <SignInButton/>
             </div>
         </header>
     );
