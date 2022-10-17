@@ -7,7 +7,8 @@ const cookies = parseCookies();
 
 export const api = axios.create({
     /* baseURL: process.env.AXIOS_API, */
-    baseURL: 'https://45.169.51.87:5000',
+   /*  baseURL: 'https://45.169.51.87:5000', */
+    baseURL: 'https://radiant-woodland-81329.herokuapp.com',
     headers: {
         Authorization: `Bearer ${cookies['toron.token']}`
     }

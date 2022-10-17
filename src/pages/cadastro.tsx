@@ -12,8 +12,17 @@ function Cadastro() {
   return (
     <>
     <Header />
-       <h1>Cadastros</h1>
-       <p> {user?.nome}</p>
+      <div>
+      <h1>Cadastros</h1>
+    
+      <div>
+        <button>Lojas</button>
+        <button>Funcionarios</button>
+        <button>Clientes</button>
+        <button>vendas</button>
+      </div>
+      </div>
+      
 
     </>
 
