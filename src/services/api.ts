@@ -6,7 +6,8 @@ import { singout } from '../contexts/AuthContext';
 const cookies = parseCookies();
 
 export const api = axios.create({
-    baseURL: process.env.AXIOS_API,
+    /* baseURL: process.env.AXIOS_API, */
+    baseURL: 'http://45.169.51.87:5000',
     headers: {
         Authorization: `Bearer ${cookies['toron.token']}`
     }
