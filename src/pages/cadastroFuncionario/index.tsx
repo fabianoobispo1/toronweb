@@ -6,21 +6,21 @@ import { api } from '../../services/api';
 
 function cadastroFuncionario() {
 
-  const [ nome, setNome] = useState("");
+/*   const [ nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setpassword] = useState("");
+  const [password, setpassword] = useState(""); */
 
   async function handleSubmuit(event: FormEvent){
     event.preventDefault()
     const response = await api.post('/createuser',{
-      nome, cpf, email, password
+      /* nome, cpf, email, password */
     })
     console.log(response)
 /*     .then(Response => console.log(Response))
     .catch(err => console.log(err)) */
 
-    console.log({nome, cpf, email, password})
+    console.log({/* nome, cpf, email, password */})
   }
 
   return (
@@ -34,19 +34,19 @@ function cadastroFuncionario() {
        <form onSubmit={handleSubmuit}  className={styles.form}>
         <div>
         <strong>Nome: </strong>
-        <input type="text"  value={nome} onChange={e => setNome(e.target.value)}/>
+        <input type="text" /*  value={nome} onChange={e => setNome(e.target.value)} *//>
         </div>
         <div>
         <strong>CPF:</strong>
-        <input type="text"  value={cpf} onChange={e => setCpf(e.target.value)}/>
+        <input type="text"  /* value={cpf} onChange={e => setCpf(e.target.value)} *//>
         </div>
         <div>
         <strong>Email:</strong>
-        <input type="text"  value={email} onChange={e => setEmail(e.target.value)}/>
+        <input type="text" /*  value={email} onChange={e => setEmail(e.target.value)} *//>
         </div>
         <div>
         <strong>Senha:</strong>
-        <input type="text"  value={password} onChange={e => setpassword(e.target.value)}/>
+        <input type="text"  /* value={password} onChange={e => setpassword(e.target.value)} *//>
         </div>
 
        
