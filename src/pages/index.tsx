@@ -1,10 +1,10 @@
 import { FormEvent, useContext, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 import Head from 'next/head'
-import styles from './home.module.scss';
+import styles from './index.module.scss';
 
 
-function Home() {
+function Index() {
   const [cpf, setCpc] = useState("")
   const [password, setPassword] = useState("")
 
@@ -46,4 +46,4 @@ function Home() {
   )
 }
 
-export default Home
+export default Index

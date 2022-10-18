@@ -19,7 +19,7 @@ export function Header() {
                     <ActiveLink activeClassName={styles.active } href='/dashboard'>
                         <a>Dashboard</a>
                     </ActiveLink>
-                    <ActiveLink  activeClassName={styles.active } href='/cadastro'> 
+                    <ActiveLink  activeClassName={styles.active } href='/cadastros'> 
                         <a>Cadastros</a>
                     </ActiveLink>
                  {/*    <ActiveLink  activeClassName={styles.active } href='/dashboard'> 

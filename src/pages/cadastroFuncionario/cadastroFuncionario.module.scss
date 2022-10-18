@@ -1,0 +1,158 @@
+.contentContainer {
+    display: flex;
+    align-items: center;
+    margin: 2rem 3rem;
+    border-radius: 3px;
+    background: #fff;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px;
+
+
+    /* button {
+        background: #087edd;
+    border-radius: 4px;
+    padding: 12px;
+    border: 0;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 21px;
+    width: 12rem;
+    margin: 5px;
+   
+    
+        &:hover {
+          background: #087ddddb;
+        }
+      }
+ */
+}
+
+.form {
+    background: #fff;
+    width: 100%;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    padding: 5px 5px;
+    align-items: center;
+
+
+    div {
+        margin: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    
+    }
+
+    span {
+        color: #0000;
+        display: block;
+        padding: 7px;
+        border-radius: 15px;
+        font-size: 14px;
+      }
+
+    strong {
+        font-size: 14px;
+        line-height: 19px;
+        color: #000;
+        font-weight: bold;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        margin-right: 5px;
+      }
+    
+      input {
+        font-size: 16px;
+        color: #999;
+        padding: 8px;
+        border: 1px solid #dddddd;
+        border-radius: 4px;
+        width: 80%;
+    
+        &::placeholder {
+          color: rgba(0, 0, 0, 0.8);
+        }
+    }
+
+    button {
+        background: #087edd;
+        border-radius: 4px;
+        padding: 12px;
+        border: 0;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 21px;
+        margin-top: 15px;
+        width: 30%;
+
+        &:hover {
+          background: #087ddddb;
+        }
+      }
+
+}
+.hero {
+    max-width: 600px;
+
+    > span {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    h1 {
+        font-size: 4.5rem;
+        line-height: 4.5rem;
+        font-weight: 900;
+        margin-top: 2.5rem;
+
+        span {
+            color: var(--cyan-500);
+        }        
+    }
+
+    p {
+        font-size: 1.5rem;
+        line-height: 2.23rem;
+        margin-top: 1.5rem;
+
+        span {
+            color: var(--cyan-500);
+            font-weight: bold;
+            /* text-decoration: line-through; */
+        } 
+
+    }
+
+    button{
+        margin-top: 2.5rem;
+    }
+
+}
+
+@media screen and (max-width:700px) {
+
+    .contentContainer {
+        max-width: auto;
+        margin: 4rem auto;
+        padding: 0 2rem;
+        height: calc(100vh - 5rem);
+    
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .hero {
+        button{
+            margin: 2.5rem auto;
+            
+        }
+    }
+
+}

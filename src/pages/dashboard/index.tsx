@@ -1,7 +1,9 @@
 import { FormEvent, useContext, useEffect, useState } from 'react'
-import { AuthContext, singout } from '../contexts/AuthContext'
-import { api } from '../services/api'
-import {Header} from '../components/Heder'
+import { AuthContext, singout } from '../../contexts/AuthContext'
+import { api } from '../../services/api'
+import {Header} from '../../components/Heder'
+import Head from 'next/head'
+import styles from './dashboard.module.scss'
 
 function Dashboard() {
   const { user } = useContext(AuthContext)
@@ -12,16 +14,17 @@ function Dashboard() {
     .catch(err => console.log(err))
   }, [])
 
-  async function handleButton() {
-    singout()
-   }
+
 
   return (
     <>
+       <Head>
+        <title>Toron - Dashboard</title>
+      </Head>
     <Header />
-       <h1>Dashboard</h1>
+    <main className={styles.contentContainer}>  
        <p> {user?.nome}</p>
-   <button onClick={handleButton}>sair </button>
+    </main>
     </>
 
   )
