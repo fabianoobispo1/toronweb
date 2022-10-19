@@ -4,9 +4,13 @@ import { api } from '../../services/api'
 import {Header} from '../../components/Heder'
 import Head from 'next/head'
 import styles from './dashboard.module.scss'
+import { useCan } from '../../hooks/useCan'
 
 function Dashboard() {
   const { user } = useContext(AuthContext)
+
+
+
 
   useEffect(() => {
     api.get('/me')

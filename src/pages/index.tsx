@@ -1,14 +1,29 @@
-import { FormEvent, useContext, useState } from 'react'
+import { FormEvent, useContext, useState, useEffect } from 'react'
+import { parseCookies} from 'nookies'
 import { AuthContext } from '../contexts/AuthContext'
 import Head from 'next/head'
 import styles from './index.module.scss';
+import { api } from '../services/api';
+import Router from 'next/router';
+
 
 
 function Index() {
   const [cpf, setCpc] = useState("")
   const [password, setPassword] = useState("")
-
   const {signIn} = useContext(AuthContext)
+
+  useEffect(() => {
+    const {'toron.token':token} = parseCookies()
+
+    if(token){
+        api.get('me').then(Response => {
+          Router.push("/dashboard")
+        })
+        .catch(() => {
+           singout()
+        })
+}})
 
  
  async function handleSubmuit(event: FormEvent) {
