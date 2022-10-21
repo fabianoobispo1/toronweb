@@ -4,21 +4,38 @@ import Head from 'next/head'
 import styles from './cadastroFuncionario.module.scss'
 import { api } from '../../services/api';
 
-function cadastroFuncionario() {
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-/*   const [ nome, setNome] = useState("");
+function CadastroFuncionario() {
+  const [ nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setpassword] = useState(""); */
+  const [password, setpassword] = useState("");
 
   async function handleSubmuit(event: FormEvent){
     event.preventDefault()
+
+          //verifica campos
+          if (cpf == '' ){
+            toast("Campo cpf vazio")
+            return 
+          }
+          if (password == '' ){
+            toast("Campo Senha vazio")
+            return
+          }
+
     const response = await api.post('/createuser',{
-      /* nome, cpf, email, password */
+      nome, cpf, email, password
+    }).then(Response =>{
+      console.log(Response)
+      setNome('')
+      setCpf('')
+      setEmail('')
+      setpassword('')
     })
-    console.log(response)
-/*     .then(Response => console.log(Response))
-    .catch(err => console.log(err)) */
+    .catch(err => console.log(err)) 
 
     console.log({/* nome, cpf, email, password */})
   }
@@ -30,38 +47,39 @@ function cadastroFuncionario() {
       </Head>
       <Header />
       <main className={styles.contentContainer}>  
+        <h1>Cadastrar Funcionario</h1>  
+        <form onSubmit={handleSubmuit}  className={styles.form}>
+        <div >  
+        <strong> CPF: </strong>
+        <input type="text"  value={cpf} onChange={e => setCpf(e.target.value)}/>
+        </div>
+        <div>
+        <strong> Nome: </strong>
+        <input type="text"  value={nome} onChange={e => setNome(e.target.value)}/>
+        </div>
+     
+        <div>
+        <strong> Senha: </strong>
+        <input type="text"  value={password} onChange={e => setpassword(e.target.value)}/>
+        </div>
+        <div>
+        <strong> Email: </strong>
+        <input type="text"  value={email} onChange={e => setEmail(e.target.value)}/>
+        </div>
+     
 
-       <form onSubmit={handleSubmuit}  className={styles.form}>
-        <div>
-        <strong>Nome: </strong>
-        <input type="text" /*  value={nome} onChange={e => setNome(e.target.value)} *//>
-        </div>
-        <div>
-        <strong>CPF:</strong>
-        <input type="text"  /* value={cpf} onChange={e => setCpf(e.target.value)} *//>
-        </div>
-        <div>
-        <strong>Email:</strong>
-        <input type="text" /*  value={email} onChange={e => setEmail(e.target.value)} *//>
-        </div>
-        <div>
-        <strong>Senha:</strong>
-        <input type="text"  /* value={password} onChange={e => setpassword(e.target.value)} *//>
-        </div>
-
-       
-        <button type="submit">
-         Salvar
-        </button>
+         
       
       </form>
-    
+      <button type="submit">
+         Salvar
+        </button>
  
 
-
+        <ToastContainer />
       </main>
     </>
 
   )
 }
-export default cadastroFuncionario
+export default CadastroFuncionario

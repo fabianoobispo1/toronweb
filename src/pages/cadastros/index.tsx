@@ -5,10 +5,25 @@ import {Header} from '../../components/Heder'
 import Head from 'next/head'
 import styles from './cadastros.module.scss';
 import Router from "next/router";
+import { api } from '../../services/api';
 
 
 
-function cadastros() {
+function Cadastros() {
+
+  const { user } = useContext(AuthContext)
+
+  const [admin, setAdmin] = useState(false);
+
+
+  useEffect(() => {
+    api.get('/me')
+    .then(({ data }) => {
+      setAdmin(data.administrador)
+      console.log(data.administrador)
+    })
+      .catch(console.error);
+  })
 
 
 
@@ -21,9 +36,7 @@ function cadastros() {
      
     <Header />
     <main className={styles.contentContainer}>  
-    
- 
-      <button onClick={()=>{Router.push('/cadastroFuncionario')}} >Funcionarios</button>
+      { admin ?<button onClick={()=>{Router.push('/cadastroFuncionario')}} >Funcionarios</button> : ""}
       <button onClick={()=>{Router.push('/cadastroLoja')}} >Lojas</button>        
       <button onClick={()=>{Router.push('/cadastroCliente')}} >Clientes</button>
       <button onClick={()=>{Router.push('/cadastroVenda')}} >vendas</button>
@@ -37,4 +50,4 @@ function cadastros() {
   )
 }
 
-export default cadastros
+export default Cadastros

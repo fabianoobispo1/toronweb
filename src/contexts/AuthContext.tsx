@@ -2,6 +2,7 @@ import Router from "next/router";
 import {setCookie, parseCookies, destroyCookie} from 'nookies'
 import {createContext, ReactNode, useEffect, useState} from "react";
 import { api } from "../services/api";
+import {  toast } from 'react-toastify';
 
 type User = {
     id: number
@@ -80,7 +81,15 @@ export function AuthProvider({children}:AuthProviderProps) {
         Router.push('/dashboard')
 
        } catch (error) {
-        console.log(error)
+        const eer = error.toJSON()
+
+        if (eer.status == 401){
+            toast("Dados invalidos")
+        }
+        
+        
+       
+     
        }
     }
 

@@ -8,13 +8,14 @@ import { useCan } from '../../hooks/useCan'
 
 function Dashboard() {
   const { user } = useContext(AuthContext)
-
-
-
+  const [nome, setNome] = useState('')
 
   useEffect(() => {
     api.get('/me')
-    .then(Response => console.log(Response))
+    .then(Response => {
+      setNome(Response.data.nome)
+      console.log(Response.data.nome)
+    })
     .catch(err => console.log(err))
   }, [])
 
@@ -27,7 +28,8 @@ function Dashboard() {
       </Head>
     <Header />
     <main className={styles.contentContainer}>  
-       <p> {user?.nome}</p>
+       <p> {nome}</p>
+     
     </main>
     </>
 
