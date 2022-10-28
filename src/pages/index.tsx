@@ -5,9 +5,11 @@ import Head from 'next/head'
 //import styles from './index.module.scss';
 import { api } from '../services/api';
 import Router from 'next/router';
+import { InfinitySpin } from 'react-loader-spinner'
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 
 
@@ -15,6 +17,7 @@ function Index() {
   const [cpf, setCpc] = useState("")
   const [password, setPassword] = useState("")
   const {signIn} = useContext(AuthContext)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const {'toron.token':token} = parseCookies()
@@ -29,6 +32,7 @@ function Index() {
  
  async function handleSubmuit(event: FormEvent) {
     event.preventDefault()
+    setLoading(true)
     const data = {
       cpf,
       password
@@ -44,7 +48,9 @@ function Index() {
       toast("Campo Senha vazio")
       return
     }
+
      await signIn(data)
+      setLoading(false)
   }
 
   return (
@@ -84,12 +90,27 @@ function Index() {
            {/*  <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
           </div>
           <div className="flex items-center justify-between">
+            {loading?
             <button 
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-16 rounded focus:outline-none focus:shadow-outline"
+            className="h-12 w-72 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-16 rounded focus:outline-none focus:shadow-outline"
+            type="submit"
+          >
+          <div className='-m-2 ml-1'>
+           <InfinitySpin
+              width='90'
+              
+              color="white" 
+            /> 
+          </div>  
+          </button>           
+            :
+            <button 
+              className="h-12 w-72 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-16 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
               Entrar no sistema
             </button>
+            }
             {/* <a className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
             Forgot Password?
             </a> */}

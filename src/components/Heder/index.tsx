@@ -14,7 +14,7 @@ export function Header() {
         className="border-solid border-b" 
         >
             <div className={styles.headerContent}>
-               {/*  <img src="/images/logo1.svg" alt="Logo1" /> */}
+              
                 <nav>   
                     <ActiveLink activeClassName={styles.active } href='/dashboard'>
                         <a>Dashboard</a>
@@ -22,13 +22,12 @@ export function Header() {
                     <ActiveLink  activeClassName={styles.active } href='/cadastros'> 
                         <a>Cadastros</a>
                     </ActiveLink>
-                 {/*    <ActiveLink  activeClassName={styles.active } href='/dashboard'> 
-                        <a>Sobre</a>
-                    </ActiveLink>    */}       
+                    
               
                 </nav>
                 <SignInButton/>
             </div>
         </header>
+        
     );
 }

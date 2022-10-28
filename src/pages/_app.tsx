@@ -1,7 +1,6 @@
-import { FormEvent, useContext, useEffect, useState } from 'react'
 import { AuthProvider } from '../contexts/AuthContext'
 import '../styles/global.css';
-
+import '../styles/global.scss';
 
 
 function App({Component, pageProps}) {
