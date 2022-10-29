@@ -42,10 +42,12 @@ function Index() {
     //verifica campos
     if (data.cpf == '' ){
       toast("Campo cpf vazio")
+      setLoading(false)
       return 
     }
     if (data.password == '' ){
       toast("Campo Senha vazio")
+      setLoading(false)
       return
     }
 
