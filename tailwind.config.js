@@ -7,6 +7,7 @@ module.exports = {
         'sans': ['Roboto', 'Helvetica', 'Arial', 'sans-serif']
       }
     },
+  
   },
   plugins: [],
 }

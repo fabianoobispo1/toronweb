@@ -1,10 +1,11 @@
 import { FormEvent, useContext, useEffect, useState } from 'react'
 import { AuthContext, singout } from '../../contexts/AuthContext'
 import { api } from '../../services/api'
-import {Header} from '../../components/Heder'
 import Head from 'next/head'
 import styles from './dashboard.module.scss'
 import { useCan } from '../../hooks/useCan'
+import Navbar from '../../components/Navbar'
+
 
 function Dashboard() {
   const { user } = useContext(AuthContext)
@@ -28,7 +29,7 @@ function Dashboard() {
        <Head>
         <title>Toron - Dashboard</title>
       </Head>
-    <Header />
+      <Navbar />
     <main className={styles.contentContainer}>  
        <p> {nome}</p>
      

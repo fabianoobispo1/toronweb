@@ -1,5 +1,4 @@
 import {FormEvent, useState, useRef, useEffect} from 'react'
-import {Header} from '../../components/Heder'
 import Head from 'next/head'
 import styles from './cadastroFuncionario.module.scss'
 import { api } from '../../services/api';
@@ -7,6 +6,7 @@ import { RiDeleteBin5Line, RiEditLine } from "react-icons/ri";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { InfinitySpin } from 'react-loader-spinner'
+import Navbar from '../../components/Navbar';
 
 
 function CadastroFuncionario() {
@@ -167,7 +167,7 @@ function CadastroFuncionario() {
       <Head>
         <title>Toron - Cadastro Usuarios</title>
       </Head>
-      <Header />
+      <Navbar />
       <div className="container my-12 px-6 mx-auto">
         <h2 className="text-3xl font-bold mb-12 text-center">
         Cadastrar Funcionario

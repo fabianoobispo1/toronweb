@@ -1,5 +1,4 @@
 import {FormEvent, useState, useRef, useEffect} from 'react'
-import {Header} from '../../components/Heder'
 import Head from 'next/head'
 import styles from './CadastroLoja.module.scss'
 import { api } from '../../services/api';
@@ -163,7 +162,6 @@ function CadastroLoja() {
       <Head>
         <title>Toron - Cadastro Usuarios</title>
       </Head>
-      <Header />
       <div className="container my-12 px-6 mx-auto">
         <h2 className="text-3xl font-bold mb-12 text-center">
         Cadastrar Loja

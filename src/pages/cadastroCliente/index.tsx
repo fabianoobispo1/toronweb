@@ -1,5 +1,5 @@
-import {Header} from '../../components/Heder'
 import Head from 'next/head'
+import Navbar from '../../components/Navbar'
 import styles from './cadastroCliente.module.scss'
 
 function cadastroCliente() {
@@ -8,7 +8,7 @@ function cadastroCliente() {
       <Head>
         <title>Toron - Cadastro Clientes</title>
       </Head>
-      <Header />
+      <Navbar />
       <main className={styles.contentContainer}>  
     
  
