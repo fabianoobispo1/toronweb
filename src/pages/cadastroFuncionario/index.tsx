@@ -22,10 +22,17 @@ function CadastroFuncionario() {
   const [passwordModal, setpasswordModal] = useState("");
   const [administradorModal, setAdministradorModal] = useState(false)
 
+  const [nomeModalConfirm, setNomeModalConfirm] = useState("");
+  const [idModalConfirm, setIdModalConfirm] = useState("");
+  const [loadingConfirm, setLoadingConfirm] = useState(false)
+
   const [admin, setAdmin] = useState(false);
   const [userList, setUserList] = useState([])
   const [loading, setLoading] = useState(false)
   const [showModal, setShowModal] = useState(false);
+  const [showModalConfirm, setShowModalConfirm] = useState(false);
+
+  
 
   const ref = useRef(null);
  
@@ -45,7 +52,7 @@ function CadastroFuncionario() {
        // console.log(data.resultAllUser)
       })
         .catch(console.error);
-  
+      
 
   },[])
 
@@ -125,6 +132,11 @@ function CadastroFuncionario() {
     }
 
   }
+  function handleRemoveFuncionrio(idUser: any, nomeUser:any){
+    setIdModalConfirm(idUser)
+    setNomeModalConfirm(nomeUser)    
+    setShowModalConfirm(true)
+  }
 
   function handleEditFuncionrio(idUser: any){
     const user =  userList.find(obj => {
@@ -161,7 +173,28 @@ function CadastroFuncionario() {
     setShowModal(false)
   }
   
+  async function handleModalconfirmOK(){
+    setLoadingConfirm(true)
+    const response = await api.post('/removerusuario',{
+      id: idModalConfirm
+    }).then(Response =>{
+      setLoadingConfirm(false)
+      console.log(Response)
+    })
+    .catch(err => console.log(err))
 
+    setLoading(false)
+    api.get('/userlist')
+    .then(({ data }) => {
+      setLoading(true)
+      setUserList(data.resultAllUser)
+     // console.log(data.resultAllUser)
+    })
+      .catch(console.error);
+    
+      
+    setShowModalConfirm(false)
+  }
   return (
     <>
       <Head>
@@ -327,13 +360,15 @@ function CadastroFuncionario() {
               color="#737380"
               className=""              
             />
-
-
             </button>
+
+            <button   onClick={() => handleRemoveFuncionrio(users.id, users.nome)}>
             <RiDeleteBin5Line 
             color="#737380"
             className=""            
             />
+            </button>
+            
           
             </div>
           </div>           
@@ -531,6 +566,58 @@ function CadastroFuncionario() {
             </div>
           </div>
          {/*  <div className="opacity-25 fixed inset-0 z-40 bg-black"></div> */}
+        </>
+      ) : null}
+
+
+      {showModalConfirm ? (
+        <>
+          <div
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          >
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                  <h3 className="text-3xl font-semibold text-gray-600">
+                    Aviso
+                  </h3>              
+                </div>
+                {/*body*/}
+                <div className="relative p-6 flex-auto">
+                <p className='text-black'>Deseja Remover o Funcionario {nomeModalConfirm}?</p>
+                 
+                </div>
+                {/*footer*/}
+                <div className="flex items-center justify-end p-3 border-slate-200 rounded-b">
+                  <button
+                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => {
+                    setShowModalConfirm(false)}}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={handleModalconfirmOK}
+                  >
+                  {loadingConfirm?
+                   <InfinitySpin
+                   width="70"
+                   color="green"  
+                   /> :
+                    "Confirmar"  
+    
+                   }
+                  
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </>
       ) : null}
      
