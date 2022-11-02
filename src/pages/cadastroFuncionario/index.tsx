@@ -16,6 +16,7 @@ function CadastroFuncionario() {
   const [password, setpassword] = useState("");
   const [administrador, setAdministrador] = useState(false)
 
+  const [idModal, setIdModal] = useState("");
   const [nomeModal, setNomeModal] = useState("");
   const [cpfModal, setCpfModal] = useState("");
   const [emailModal, setEmailModal] = useState("");
@@ -123,13 +124,14 @@ function CadastroFuncionario() {
     console.log({ nome, cpf, email, password, administrador})
   }
 
-  function handleCheckAdm(event: FormEvent){
-    event.preventDefault()
-    if (ref.current.checked) {
+  function handleCheckAdm(evento : any){
+    console.log(evento)
+    if (evento) {
       setAdministrador(true)
     } else {
       setAdministrador(false)
     }
+
 
   }
   function handleRemoveFuncionrio(idUser: any, nomeUser:any){
@@ -142,34 +144,80 @@ function CadastroFuncionario() {
     const user =  userList.find(obj => {
       return obj.id === idUser;
     })
-
+    setIdModal(user.id)
     setNomeModal(user.nome)
     setCpfModal(user.cpf)
     setEmailModal(user.email)
+    setAdministradorModal(user.administrador)
     setpasswordModal("")
 
-    
     setShowModal(true)
   }
+  function handleCheckAdmModal(evento : any){  
+    if (evento) {
+      setAdministradorModal(true)
+    } else {
+      setAdministradorModal(false)
+    }
+  }
 
-  function handleSubmuitModal(){
-    
-          //verifica campos
-          if (cpfModal == '' ){
-            toast("Campo cpf vazio")
-            return 
-          }
-          if (emailModal == '' ){
-            toast("Campo email vazio")
-            return 
-          }
-          if (nomeModal == '' ){
-            toast("Campo nome vazio")
-            return
-          }
+  
+  async function handleSubmuitModal(){    
+    //verifica campos
+    if (cpfModal == '' ){
+      toast("Campo cpf vazio")
+      return 
+    }
+    if (emailModal == '' ){
+      toast("Campo email vazio")
+      return 
+    }
+    if (nomeModal == '' ){
+      toast("Campo nome vazio")
+      return
+    }
+
+    if(passwordModal !== ''){
+      if(passwordModal.length<6){
+        toast("Senha invalida")
+        return 
+      }
+      const response = await api.post('/atualizarusuario',{
+        id: idModal,
+        cpf: cpfModal,
+        nome: nomeModal,
+        administrador: administradorModal,
+        email: emailModal,
+        password: passwordModal
+      }).then(Response =>{
+        setLoadingConfirm(false)
+        console.log(Response)
+      })
+      .catch(err => console.log(err))
+
+    }else{
+      const response = await api.post('/atualizarusuario',{
+        id: idModal,
+        cpf: cpfModal,
+        nome: nomeModal,
+        administrador: administradorModal,
+        email: emailModal,
+      }).then(Response =>{
+        setLoadingConfirm(false)
+        console.log(Response)
+      })
+      .catch(err => console.log(err))
+    }
 
 
-    console.log(cpfModal,emailModal, nomeModal, administradorModal)      
+
+    api.get('/userlist')
+    .then(({ data }) => {
+      setLoading(true)
+      setUserList(data.resultAllUser)
+     // console.log(data.resultAllUser)
+    })
+    .catch(console.error);
     setShowModal(false)
   }
   
@@ -249,174 +297,10 @@ function CadastroFuncionario() {
                   id="exampleInput124"
                   aria-describedby="emailHelp124" 
                   placeholder="Nome"
-                  type="text"  value={nome} onChange={e => setNome(e.target.value)} />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-              <div className="form-group mb-6">
-                <input className="form-control
-                  block
-                  w-full
-                  px-3
-                  py-1.5
-                  text-base
-                  font-normal
-                  text-gray-700
-                  bg-white bg-clip-padding
-                  border border-solid border-gray-300
-                  rounded
-                  transition
-                  ease-in-out
-                  m-0
-                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                id="exampleInput123"
-                aria-describedby="emailHelp123" 
-                placeholder="Email"
-                type="text"  value={password} onChange={e => setpassword(e.target.value)} />
-              </div>
-              <div className="form-group mb-6">
-                <input  className="form-control
-                  block
-                  w-full
-                  px-3
-                  py-1.5
-                  text-base
-                  font-normal
-                  text-gray-700
-                  bg-white bg-clip-padding
-                  border border-solid border-gray-300
-                  rounded
-                  transition
-                  ease-in-out
-                  m-0
-                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" 
-                  id="exampleInput124"
-                  aria-describedby="emailHelp124" 
-                  placeholder="Senha" 
-                  type="text"  value={email} onChange={e => setEmail(e.target.value)}/>
-                </div>
-              </div>
-              {admin ? 
-              <div className="form-group form-check text-center mb-6">
-                <input type="checkbox"
-                  className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain mr-2 cursor-pointer"
-                  id="exampleCheck25"  ref={ref}  onChange={handleCheckAdm}/>
-                <label className="form-check-label inline-block text-gray-800">Administrador</label> 
-              </div>
-              : ""}
-              <div className="grid grid-cols-3 gap-1 max-w-sm">
-              
-                <button type="submit" className="
-                  w-full
-                  px-6
-                  py-2.5
-                  bg-blue-600
-                  text-white
-                  font-medium
-                  text-xs
-                  leading-tight
-                  uppercase
-                  rounded
-                  shadow-md
-                  hover:bg-blue-700 hover:shadow-lg
-                  focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
-                  active:bg-blue-800 active:shadow-lg
-                  transition
-                  duration-150
-                  ease-in-out"
-                >cadastrar</button>
-              </div>
-          </form>
-        </div>
-
-        
-        {loading?
-        <div className="block p-6 rounded-lg shadow-lg bg-white my-4 ">
-          {userList.map((users) => (
-          <div key={users.id}  className="p-2 rounded-lg shadow-lg bg-white text-black flex flex-row my-1">
-            <div className=" basis-1/2">
-              <div className="flex flex-row gap-x-3">
-                <p>nome: </p> <p>{users.nome}</p> 
-              </div>
-              <div className="flex flex-row gap-x-3">
-                <p>cpf: </p> <p>{users.cpf}</p> 
+                  type="text"  value={nome} onChange={e => setNome(e.target.value)} 
+                />
               </div>
             </div>
-            <div className=" basis-1/2">
-              <div className="flex flex-row gap-x-3">
-                <p>email: </p> <p>{users.email}</p> 
-              </div>
-              <div className="flex flex-row gap-x-3">
-                <p>senha: </p> <p>*******</p> 
-              </div>                             
-            </div>            
-            <div className=" basis-1/1">
-                
-
-            <button
-              onClick={() => handleEditFuncionrio(users.id)}
-            >  
-            <RiEditLine 
-              color="#737380"
-              className=""              
-            />
-            </button>
-
-            <button   onClick={() => handleRemoveFuncionrio(users.id, users.nome)}>
-            <RiDeleteBin5Line 
-            color="#737380"
-            className=""            
-            />
-            </button>
-            
-          
-            </div>
-          </div>           
-          ))}
-        </div>
-        :
-        <div className="flex justify-center p-6 rounded-lg shadow-lg bg-white my-4 "> 
-          <InfinitySpin
-            width="80"
-            color="blue"  
-          />       
-        </div>}
-      </div>
-     
-
-        <ToastContainer />
-
-        {showModal ? (
-        <>
-          <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-          >
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
-              {/*content*/}
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                {/*header*/}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-3xl font-semibold text-gray-600">
-                    Alterar Cadastro
-                  </h3>
-                  <button
-                    className="p-1 ml-auto bg-transparent border-0 text-gray-600 opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => {
-                      setNome('')
-                      setCpf('')
-                      setEmail('')
-                      setpassword('')
-                      setShowModal(false)}}
-                  >
-                    <span className="bg-transparent text-gray-600 opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none ">
-                      X
-                    </span>
-                  </button>
-                </div>
-                {/*body*/}
-                <div className="relative p-6 flex-auto">
-                <div className="block p-6 rounded-lg shadow-lg bg-white ">
-          
             <div className="grid grid-cols-2 gap-4">
               <div className="form-group mb-6">
                 <input className="form-control
@@ -434,55 +318,11 @@ function CadastroFuncionario() {
                   ease-in-out
                   m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                id="exampleInput123"
-                aria-describedby="emailHelp123" 
-                placeholder="Cpf"
-                type="text"  value={cpfModal} onChange={e => setCpfModal(e.target.value)}
+                  id="exampleInput123"
+                  aria-describedby="emailHelp123" 
+                  placeholder="Email"
+                  type="text"  value={email} onChange={e => setEmail(e.target.value)} 
                 />
-              </div>
-              <div className="form-group mb-6">
-                <input className="form-control
-                  block
-                  w-full
-                  px-3
-                  py-1.5
-                  text-base
-                  font-normal
-                  text-gray-700
-                  bg-white bg-clip-padding
-                  border border-solid border-gray-300
-                  rounded
-                  transition
-                  ease-in-out
-                  m-0
-                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" 
-                  id="exampleInput124"
-                  aria-describedby="emailHelp124" 
-                  placeholder="Nome"
-                  type="text"  value={nomeModal} onChange={e => setNomeModal(e.target.value)} />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-              <div className="form-group mb-6">
-                <input className="form-control
-                  block
-                  w-full
-                  px-3
-                  py-1.5
-                  text-base
-                  font-normal
-                  text-gray-700
-                  bg-white bg-clip-padding
-                  border border-solid border-gray-300
-                  rounded
-                  transition
-                  ease-in-out
-                  m-0
-                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                id="exampleInput123"
-                aria-describedby="emailHelp123" 
-                placeholder="Email"
-                type="text"  value={emailModal} onChange={e => setEmailModal(e.target.value)} />
               </div>
               <div className="form-group mb-6">
                 <input  className="form-control
@@ -503,19 +343,23 @@ function CadastroFuncionario() {
                   id="exampleInput124"
                   aria-describedby="emailHelp124" 
                   placeholder="Senha" 
-                  type="text"  value={passwordModal} onChange={e => setpasswordModal(e.target.value)}/>
-                </div>
+                  type="text"  value={password} onChange={e => setpassword(e.target.value)} 
+                />
               </div>
+            </div>
               {admin ? 
-              <div className="form-group form-check text-center mb-6">
-                <input type="checkbox"
-                  className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain mr-2 cursor-pointer"
-                  id="exampleCheck25"  ref={ref}  onChange={handleCheckAdm}/>
-                <label className="form-check-label inline-block text-gray-800">Administrador</label> 
+              <div className="form-group form-check text-center mb-6 ">               
+                <input 
+                  id="checkbox-item-1" 
+                  type="checkbox"  
+                  checked={administrador} 
+                  onChange={e =>handleCheckAdm(e.target.checked)}
+                  className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" 
+                />         
+                <label className="ml-2 form-check-label inline-block text-gray-800">Administrador</label> 
               </div>
               : ""}
-            {/*   <div className="grid grid-cols-3 gap-1 max-w-sm">
-              
+              <div className="grid grid-cols-3 gap-1 max-w-sm">              
                 <button type="submit" className="
                   w-full
                   px-6
@@ -533,11 +377,209 @@ function CadastroFuncionario() {
                   active:bg-blue-800 active:shadow-lg
                   transition
                   duration-150
-                  ease-in-out"
-                >cadastrar</button>
-              </div> */}
-          
+                  ease-in-out">
+                  cadastrar
+                </button>
+              </div>
+          </form>
         </div>
+
+        
+        {loading?
+        <div className="block p-6 rounded-lg shadow-lg bg-white my-4 ">
+          {userList.map((users) => (
+          <div key={users.id}  className="p-2 rounded-lg shadow-lg bg-white text-black flex flex-row justify-between my-1 ">
+            <div className=" basis-1/2">
+              <div className="flex flex-row gap-x-3 py-0.5">
+                <p>nome: </p> <p>{users.nome}</p> 
+              </div>
+              <div className="flex flex-row gap-x-3 py-0.5">
+                <p>cpf: </p> <p>{users.cpf}</p> 
+              </div>
+              <div className="flex flex-row gap-x-3 py-0.5">
+                <p>email: </p> <p>{users.email}</p> 
+              </div> 
+              <div className="flex flex-row gap-x-3 py-0.5">
+                <p>senha: </p> <p>*******</p> 
+              </div>                                      
+            </div>        
+
+            <div className=" basis-1/1 flex flex-col justify-around">  
+              <button onClick={() => handleEditFuncionrio(users.id)}>  
+                <RiEditLine 
+                  size={25}
+                  color="#737380"
+                  className=""              
+                />
+              </button>
+
+              <button   onClick={() => handleRemoveFuncionrio(users.id, users.nome)}>
+                <RiDeleteBin5Line 
+                  size={25}
+                  color="#737380"
+                  className=""            
+                />
+              </button>        
+            </div>
+          </div>           
+          ))}
+        </div>
+        :
+        <div className="flex justify-center p-6 rounded-lg shadow-lg bg-white my-4 "> 
+          <InfinitySpin
+            width="80"
+            color="blue"  
+          />       
+        </div>}
+      </div>    
+
+      <ToastContainer />
+
+        {showModal ? (
+        <>
+          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-60 outline-none focus:outline-none bg-gray-200 bg-opacity-50">
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col  bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                  <h3 className="text-3xl font-semibold text-gray-600">
+                    Alterar Cadastro
+                  </h3>                
+                </div>
+                {/*body*/}
+                <div className="relative p-6 flex-auto">
+                  <div className="block p-6 rounded-lg shadow-lg bg-white ">          
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="form-group mb-6">
+                        <input className="form-control
+                          block
+                          w-full
+                          px-3
+                          py-1.5
+                          text-base
+                          font-normal
+                          text-gray-700
+                          bg-white bg-clip-padding
+                          border border-solid border-gray-300
+                          rounded
+                          transition
+                          ease-in-out
+                          m-0
+                          focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                          id="exampleInput123"
+                          aria-describedby="emailHelp123" 
+                          placeholder="Cpf"
+                          type="text"  
+                          value={cpfModal} 
+                          onChange={e => setCpfModal(e.target.value)}
+                        />
+                      </div>
+                      <div className="form-group mb-6">
+                        <input className="form-control
+                          block
+                          w-full
+                          px-3
+                          py-1.5
+                          text-base
+                          font-normal
+                          text-gray-700
+                          bg-white bg-clip-padding
+                          border border-solid border-gray-300
+                          rounded
+                          transition
+                          ease-in-out
+                          m-0
+                          focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" 
+                          id="exampleInput124"
+                          aria-describedby="emailHelp124" 
+                          placeholder="Nome"
+                          type="text"  value={nomeModal} onChange={e => setNomeModal(e.target.value)} 
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="form-group mb-6">
+                        <input className="form-control
+                          block
+                          w-full
+                          px-3
+                          py-1.5
+                          text-base
+                          font-normal
+                          text-gray-700
+                          bg-white bg-clip-padding
+                          border border-solid border-gray-300
+                          rounded
+                          transition
+                          ease-in-out
+                          m-0
+                          focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                          id="exampleInput123"
+                          aria-describedby="emailHelp123" 
+                          placeholder="Email"
+                          type="text"  value={emailModal} onChange={e => setEmailModal(e.target.value)} 
+                        />
+                      </div>
+                      <div className="form-group mb-6">
+                        <input  className="form-control
+                          block
+                          w-full
+                          px-3
+                          py-1.5
+                          text-base
+                          font-normal
+                          text-gray-700
+                          bg-white bg-clip-padding
+                          border border-solid border-gray-300
+                          rounded
+                          transition
+                          ease-in-out
+                          m-0
+                          focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" 
+                          id="exampleInput124"
+                          aria-describedby="emailHelp124" 
+                          placeholder="Senha" 
+                          type="text"  value={passwordModal} onChange={e => setpasswordModal(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    {admin ? 
+                    <div className="form-group form-check text-center mb-6">   
+                      <input 
+                        id="checkbox-item-1" 
+                        type="checkbox"  
+                        checked={administradorModal} 
+                        onChange={e =>handleCheckAdmModal(e.target.checked)}
+                        className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" 
+                      />  
+                      <label className="form-check-label inline-block text-gray-800">Administrador</label> 
+                    </div>
+                    : ""}
+                    {/*   <div className="grid grid-cols-3 gap-1 max-w-sm">
+                      
+                        <button type="submit" className="
+                          w-full
+                          px-6
+                          py-2.5
+                          bg-blue-600
+                          text-white
+                          font-medium
+                          text-xs
+                          leading-tight
+                          uppercase
+                          rounded
+                          shadow-md
+                          hover:bg-blue-700 hover:shadow-lg
+                          focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
+                          active:bg-blue-800 active:shadow-lg
+                          transition
+                          duration-150
+                          ease-in-out"
+                        >cadastrar</button>
+                      </div> */}
+                  
+                </div>
                  
                 </div>
                 {/*footer*/}
@@ -573,7 +615,7 @@ function CadastroFuncionario() {
       {showModalConfirm ? (
         <>
           <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-gray-200 bg-opacity-50"
           >
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
               {/*content*/}

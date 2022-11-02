@@ -39,7 +39,7 @@ export default function Navbar() {
         singout()
     }
     return (
-        <nav className="flex filter drop-shadow-md bg-gray-700 px-4 py-4 h-20 items-center">
+        <nav className="flex filter drop-shadow-md bg-gray-700 px-4 py-4 h-18 items-center">
             <MobileNav open={open} setOpen={setOpen}/>
             <div className="w-3/12 flex items-center">
                 <Link className="text-2xl font-semibold" href="/">Toron</Link>
