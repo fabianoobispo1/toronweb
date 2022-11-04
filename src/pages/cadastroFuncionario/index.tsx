@@ -87,26 +87,25 @@ function CadastroFuncionario() {
 
 
 
-  async function handleSubmuit(event: FormEvent){
+  async function handleSubmitt(event: FormEvent){
     event.preventDefault()
-
-          //verifica campos
-          if (cpf == '' ){
-            toast("Campo cpf vazio")
-            return 
-          }
-          if (password == '' ){
-            toast("Campo Senha vazio")
-            return
-          }
-          if (email == '' ){
-            toast("Campo email vazio")
-            return 
-          }
-          if (nome == '' ){
-            toast("Campo nome vazio")
-            return
-          }
+    //verifica campos
+    if (cpf == '' ){
+      toast("Campo cpf vazio")
+      return 
+    }
+    if (password == '' ){
+      toast("Campo Senha vazio")
+      return
+    }
+    if (email == '' ){
+      toast("Campo email vazio")
+      return 
+    }
+    if (nome == '' ){
+      toast("Campo nome vazio")
+      return
+    }
 
     const response = await api.post('/createuser',{
       nome, cpf, email, password
@@ -254,7 +253,7 @@ function CadastroFuncionario() {
         Cadastrar Funcionario
         </h2>
         <div className="block p-6 rounded-lg shadow-lg bg-white ">
-          <form onSubmit={handleSubmuit}>
+          <form onSubmit={handleSubmitt}>
             <div className="grid grid-cols-2 gap-4">
               <div className="form-group mb-6">
                 <input className="form-control

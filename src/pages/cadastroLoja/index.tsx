@@ -13,6 +13,7 @@ function CadastroLoja() {
   const [nome, setNome] = useState("");
   const [sigla, setSigla] = useState("");
   const [endereco, setEndereco] = useState("");
+  const [telefone, setTelefone] = useState("");
 
   const [administrador, setAdministrador] = useState(false)
 
@@ -22,10 +23,15 @@ function CadastroLoja() {
   const [passwordModal, setpasswordModal] = useState("");
   const [administradorModal, setAdministradorModal] = useState(false)
 
+  const [idModalConfirm, setIdModalConfirm] = useState("");
+  const [nomeModalConfirm, setNomeModalConfirm] = useState("");
+  const [loadingConfirm, setLoadingConfirm] = useState(false)
+
   const [admin, setAdmin] = useState(false);
-  const [userList, setUserList] = useState([])
+  const [lojaList, setLojaList] = useState([])
   const [loading, setLoading] = useState(false)
   const [showModal, setShowModal] = useState(false);
+  const [showModalConfirm, setShowModalConfirm] = useState(false);
 
   const ref = useRef(null);
  
@@ -38,11 +44,10 @@ function CadastroLoja() {
     })
       .catch(console.error);
       setLoading(false)
-      api.get('/userlist')
+      api.get('/lojalist')
       .then(({ data }) => {
         setLoading(true)
-        setUserList(data.resultAllUser)
-       // console.log(data.resultAllUser)
+        setLojaList(data.resultLoja)
       })
         .catch(console.error);
   
@@ -79,37 +84,51 @@ function CadastroLoja() {
 
 
 
-  async function handleSubmuit(event: FormEvent){
+  async function handleSubmit(event: FormEvent){
     event.preventDefault()
 
-          //verifica campos
-          if (nome == '' ){
-            toast("Campo nome vazio")
-            return 
-          }
-          if (sigla == '' ){
-            toast("Campo sigla vazio")
-            return
-          }
-          if (endereco == '' ){
-            toast("Campo endereço vazio")
-            return 
-          }
+    //verifica campos
+    if (nome == '' ){
+      toast("Campo nome vazio")
+      return 
+    }
+    if (sigla == '' ){
+      toast("Campo sigla vazio")
+      return
+    }
+    if (endereco == '' ){
+      toast("Campo endereço vazio")
+      return 
+    }
+    if (telefone == '' ){
+      toast("Campo telefone vazio")
+      return 
+    }
      
-    /* const response = await api.post('/createuser',{
-      nome, cpf, email, password
+    const response = await api.post('/cadastrarLoja',{
+      loja_nome:nome,
+      loja_sigla: sigla, 
+      loja_endereco: endereco, 
+      loja_telefone: telefone
     }).then(Response =>{
       console.log(Response)
       setNome('')
-      setCpf('')
-      setEmail('')
-      setpassword('')
+      setSigla('')
+      setEndereco('')
+      setTelefone('')
 
       
     })
     .catch(err => console.log(err))  
- */
-    console.log({ nome, sigla, endereco})
+
+    api.get('/lojalist')
+    .then(({ data }) => {
+      setLoading(true)
+      setLojaList(data.resultLoja)
+    })
+    .catch(console.error);
+    setShowModal(false)
+
   }
 
   function handleCheckAdm(event: FormEvent){
@@ -123,7 +142,7 @@ function CadastroLoja() {
   }
 
   function handleEditFuncionrio(idUser: any){
-    const user =  userList.find(obj => {
+    const user =  lojaList.find(obj => {
       return obj.id === idUser;
     })
 
@@ -156,7 +175,35 @@ function CadastroLoja() {
     console.log(cpfModal,emailModal, nomeModal, administradorModal)      
     setShowModal(false)
   }
+
+  function handleRemoveFuncionrio(idLoja: any, lojaNome:any){
+    setIdModalConfirm(idLoja)
+    setNomeModalConfirm(lojaNome)    
+    setShowModalConfirm(true)
+  }
   
+  async function handleModalconfirmOK(){
+    setLoadingConfirm(true)
+    const response = await api.post('/removerloja',{
+      id: idModalConfirm
+    }).then(Response =>{
+      setLoadingConfirm(false)
+      console.log(Response)
+    })
+    .catch(err => console.log(err))
+
+    setLoading(false)
+    api.get('/lojalist')
+    .then(({ data }) => {
+      setLoading(true)
+      setLojaList(data.resultLoja)
+     // console.log(data.resultAllUser)
+    })
+      .catch(console.error);
+    
+      
+    setShowModalConfirm(false)
+  }
 
   return (
     <>
@@ -169,7 +216,7 @@ function CadastroLoja() {
         Cadastrar Loja
         </h2>
         <div className="block p-6 rounded-lg shadow-lg bg-white ">
-          <form onSubmit={handleSubmuit}>
+          <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4">
               <div className="form-group mb-6">
                 <input className="form-control
@@ -216,10 +263,11 @@ function CadastroLoja() {
                   placeholder="Sigla"
                   type="text"  
                   value={sigla} 
-                  onChange={e => setSigla(e.target.value)} />
-                </div>
+                  onChange={e => setSigla(e.target.value)} 
+                />
               </div>
-              <div className="grid grid-cols-1 gap-4">
+            </div>
+            <div className="grid grid-cols-2 gap-4">
               <div className="form-group mb-6">
                 <input className="form-control
                   block
@@ -241,12 +289,38 @@ function CadastroLoja() {
                   placeholder="Endereço"
                   type="text" 
                   value={endereco}
-                  onChange={e => setEndereco(e.target.value)} />
-              </div>            
+                  onChange={e => setEndereco(e.target.value)} 
+                />
+              </div>
+              <div className="form-group mb-6">
+                <input className="form-control
+                  block
+                  w-full
+                  px-3
+                  py-1.5
+                  text-base
+                  font-normal
+                  text-gray-700
+                  bg-white bg-clip-padding
+                  border border-solid border-gray-300
+                  rounded
+                  transition
+                  ease-in-out
+                  m-0
+                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                  id="exampleInput123"
+                  aria-describedby="emailHelp123" 
+                  placeholder="Telefone"
+                  type="text" 
+                  value={telefone}
+                  onChange={e => setTelefone(e.target.value)} 
+                />
+              </div>             
             </div>
              
             <div className="grid grid-cols-3 gap-1 max-w-sm">              
-              <button type="submit" 
+              <button 
+                type="submit" 
                 className="
                   w-full
                   px-6
@@ -274,28 +348,31 @@ function CadastroLoja() {
         
         {loading?
         <div className="block p-6 rounded-lg shadow-lg bg-white my-4 ">
-          {userList.map((users) => (
-          <div key={users.id}  className="p-2 rounded-lg shadow-lg bg-white text-black flex flex-row my-1">
+          {lojaList.map((loja) => (
+          <div key={loja.id}  className="p-2 rounded-lg shadow-lg bg-white text-black flex flex-row my-1">
             <div className=" basis-11/12">
               <div className="flex flex-row gap-x-3">
-                <p>nome: </p> <p>{users.nome}</p> 
+                <p>Nome: </p> <p>{loja.loja_nome}</p> 
               </div>
               <div className="flex flex-row gap-x-3">
-                <p>cpf: </p> <p>{users.cpf}</p> 
+                <p>Sigla: </p> <p>{loja.loja_sigla}</p> 
               </div>
               <div className="flex flex-row gap-x-3">
-                <p>email: </p> <p>{users.email}</p> 
+                <p>Endereço: </p> <p>{loja.loja_endereco}</p> 
+              </div>
+              <div className="flex flex-row gap-x-3">
+                <p>Telefone: </p> <p>{loja.loja_telefone}</p> 
               </div>
             </div>               
             <div className=" basis-1/12  flex flex-col justify-between">
-              <button className='flex justify-end' onClick={() => handleEditFuncionrio(users.id)}>  
+              <button className='flex justify-end' onClick={() => handleEditFuncionrio(loja.id)}>  
                 <RiEditLine 
                   color="#737380"
                   className=""              
                 />  
               </button>
 
-              <button className='flex justify-end'  onClick={() => handleEditFuncionrio(users.id)}>  
+              <button className='flex justify-end'  onClick={() =>  handleRemoveFuncionrio(loja.id, loja.loja_nome)}>  
                 <RiDeleteBin5Line 
                 color="#737380"
                 className=""            
@@ -430,6 +507,57 @@ function CadastroLoja() {
                     type="button"
                     onClick={handleSubmuitModal}>
                     Salvar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : null}
+
+      {showModalConfirm ? (
+        <>
+          <div
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-gray-200 bg-opacity-50"
+          >
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                  <h3 className="text-3xl font-semibold text-gray-600">
+                    Aviso
+                  </h3>              
+                </div>
+                {/*body*/}
+                <div className="relative p-6 flex-auto">
+                <p className='text-black'>Deseja Remover a loja {nomeModalConfirm}?</p>
+                 
+                </div>
+                {/*footer*/}
+                <div className="flex items-center justify-end p-3 border-slate-200 rounded-b">
+                  <button
+                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => {
+                    setShowModalConfirm(false)}}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={handleModalconfirmOK}
+                  >
+                  {loadingConfirm?
+                   <InfinitySpin
+                   width="70"
+                   color="green"  
+                   /> :
+                    "Confirmar"  
+    
+                   }
+                  
                   </button>
                 </div>
               </div>
