@@ -15,13 +15,12 @@ function CadastroLoja() {
   const [endereco, setEndereco] = useState("");
   const [telefone, setTelefone] = useState("");
 
-  const [administrador, setAdministrador] = useState(false)
 
+  const [idModal, setIdModal] = useState("");
   const [nomeModal, setNomeModal] = useState("");
-  const [cpfModal, setCpfModal] = useState("");
-  const [emailModal, setEmailModal] = useState("");
-  const [passwordModal, setpasswordModal] = useState("");
-  const [administradorModal, setAdministradorModal] = useState(false)
+  const [siglaModal, setSiglaModal] = useState("");
+  const [enderecoModal, setEnderecoModal] = useState("");
+  const [telefoneModal, setTelefoneModal] = useState("");
 
   const [idModalConfirm, setIdModalConfirm] = useState("");
   const [nomeModalConfirm, setNomeModalConfirm] = useState("");
@@ -53,33 +52,6 @@ function CadastroLoja() {
   
 
   },[])
-
-
- 
-  
-
-
-  
-
-/*   useEffect(() => {
-    let mounted =true 
- 
-     async function fetch() {
-       const res = await axios.get(`${genUrl()}`);
-       if(mounted ){
-            set_state(res.data);
-       }
-      
-     }
-     fetch();
- 
-     //this is for cleaning up use effect to prevent updating state when component is unmounted
-     return ()=>mounted =false
-   },[]);
-   const fetchedData = state.results; */
-
-
-
 
 
 
@@ -131,52 +103,67 @@ function CadastroLoja() {
 
   }
 
-  function handleCheckAdm(event: FormEvent){
-    event.preventDefault()
-    if (ref.current.checked) {
-      setAdministrador(true)
-    } else {
-      setAdministrador(false)
-    }
 
-  }
 
-  function handleEditFuncionrio(idUser: any){
-    const user =  lojaList.find(obj => {
-      return obj.id === idUser;
+  function handleEditLoja(idLoja: any){
+    const loja =  lojaList.find(obj => {
+      return obj.id === idLoja;
     })
 
-    setNomeModal(user.nome)
-    setCpfModal(user.cpf)
-    setEmailModal(user.email)
-    setpasswordModal("")
-
+    setIdModal(loja.id)
+    setNomeModal(loja.loja_nome)
+    setSiglaModal(loja.loja_sigla)
+    setEnderecoModal(loja.loja_endereco)
+    setTelefoneModal(loja.loja_telefone)
+    
     
     setShowModal(true)
   }
 
-  function handleSubmuitModal(){
+ async function handleSubmuitModal(){
     
-          //verifica campos
-          if (cpfModal == '' ){
-            toast("Campo cpf vazio")
-            return 
-          }
-          if (emailModal == '' ){
-            toast("Campo email vazio")
-            return 
-          }
-          if (nomeModal == '' ){
-            toast("Campo nome vazio")
-            return
-          }
+  //verifica campos
+  if (nomeModal == '' ){
+    toast("Campo Nome vazio")
+    return 
+  }
+  if (siglaModal == '' ){
+    toast("Campo Siogla vazio")
+    return 
+  }
+  if (enderecoModal == '' ){
+    toast("Campo endereço vazio")
+    return
+  }
+  if (telefoneModal == '' ){
+    toast("Campo telefone vazio")
+    return
+  }
 
+  const response = await api.post('/atualizarloja',{
+    id:idModal,
+	  loja_nome: nomeModal,
+	  loja_sigla: siglaModal,
+	  loja_endereco:enderecoModal,
+	  loja_telefone:telefoneModal,
+  }).then(Response =>{
+    setLoadingConfirm(false)
+    
+  })
+  .catch(err => console.log(err))
 
-    console.log(cpfModal,emailModal, nomeModal, administradorModal)      
+  api.get('/lojalist')
+  .then(({ data }) => {
+    setLoading(true)
+    setLojaList(data.resultLoja)
+   // console.log(data.resultAllUser)
+  })
+    .catch(console.error);
+  
     setShowModal(false)
   }
 
-  function handleRemoveFuncionrio(idLoja: any, lojaNome:any){
+  function handleRemoveLoja(idLoja: any, lojaNome:any){
     setIdModalConfirm(idLoja)
     setNomeModalConfirm(lojaNome)    
     setShowModalConfirm(true)
@@ -188,7 +175,7 @@ function CadastroLoja() {
       id: idModalConfirm
     }).then(Response =>{
       setLoadingConfirm(false)
-      console.log(Response)
+     
     })
     .catch(err => console.log(err))
 
@@ -316,8 +303,7 @@ function CadastroLoja() {
                   onChange={e => setTelefone(e.target.value)} 
                 />
               </div>             
-            </div>
-             
+            </div>             
             <div className="grid grid-cols-3 gap-1 max-w-sm">              
               <button 
                 type="submit" 
@@ -365,14 +351,14 @@ function CadastroLoja() {
               </div>
             </div>               
             <div className=" basis-1/12  flex flex-col justify-between">
-              <button className='flex justify-end' onClick={() => handleEditFuncionrio(loja.id)}>  
+              <button className='flex justify-end' onClick={() => handleEditLoja(loja.id)}>  
                 <RiEditLine 
                   color="#737380"
                   className=""              
                 />  
               </button>
 
-              <button className='flex justify-end'  onClick={() =>  handleRemoveFuncionrio(loja.id, loja.loja_nome)}>  
+              <button className='flex justify-end'  onClick={() =>  handleRemoveLoja(loja.id, loja.loja_nome)}>  
                 <RiDeleteBin5Line 
                 color="#737380"
                 className=""            
@@ -403,7 +389,7 @@ function CadastroLoja() {
                 {/*header*/}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                   <h3 className="text-3xl font-semibold text-gray-600">
-                    Alterar Cadastro
+                    Alterar Loja
                   </h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-gray-600 opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -439,7 +425,7 @@ function CadastroLoja() {
                           id="exampleInput123"
                           aria-describedby="emailHelp123" 
                           placeholder="Nome"
-                          type="text"  value={nome} onChange={e => setNome(e.target.value)}
+                          type="text"  value={nomeModal} onChange={e => setNomeModal(e.target.value)}
                         />
                       </div>
                       <div className="form-group mb-6">
@@ -461,11 +447,11 @@ function CadastroLoja() {
                           id="exampleInput124"
                           aria-describedby="emailHelp124" 
                           placeholder="Sigla"
-                          type="text"  value={sigla} onChange={e => setSigla(e.target.value)}
+                          type="text"  value={siglaModal} onChange={e => setSiglaModal(e.target.value)}
                         />
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-2 gap-4">
                       <div className="form-group mb-6">
                         <input className="form-control
                           block
@@ -485,7 +471,29 @@ function CadastroLoja() {
                           id="exampleInput123"
                           aria-describedby="emailHelp123" 
                           placeholder="Endereço"
-                          type="text"  value={endereco} onChange={e => setEndereco(e.target.value)} 
+                          type="text"  value={enderecoModal} onChange={e => setEnderecoModal(e.target.value)} 
+                        />
+                      </div>
+                      <div className="form-group mb-6">
+                        <input className="form-control
+                          block
+                          w-full
+                          px-3
+                          py-1.5
+                          text-base
+                          font-normal
+                          text-gray-700
+                          bg-white bg-clip-padding
+                          border border-solid border-gray-300
+                          rounded
+                          transition
+                          ease-in-out
+                          m-0
+                          focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                          id="exampleInput123"
+                          aria-describedby="emailHelp123" 
+                          placeholder="Telefone"
+                          type="text"  value={telefoneModal} onChange={e => setTelefoneModal(e.target.value)} 
                         />
                       </div>
                     </div>          
