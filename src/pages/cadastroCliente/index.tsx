@@ -72,7 +72,7 @@ function CadastroLoja() {
       toast("Campo telefone vazio")
       return 
     }
-     
+     console.log(dataNascimento)
     const response = await api.post('/cadastrarCliente',{
       cliente_nome:nome,     
       cliente_data_nascimento: dataNascimento, 

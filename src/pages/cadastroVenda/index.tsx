@@ -92,6 +92,9 @@ function CadastroVenda() {
     }
   }
 
+  function handleSelectLoja(event : any){
+    setIdLoja(event.value)
+  }
 
 
 
@@ -99,6 +102,19 @@ function CadastroVenda() {
   async function handleSubmit(event: FormEvent){
     event.preventDefault()
     event.isDefaultPrevented()
+
+    api.post('/cadastrarVenda',{
+      cliente_id: idCliente,
+      loja_id: idLoja,
+      venda_valor:valorVenda,
+      venda_data:dataVenda,
+      venda_presente:vendaPresente,
+    }).then(({ data }) => {     
+      console.log('deu certo')
+    })
+    .catch(err => console.log(err))  
+
+ 
     console.log(idCliente)
     console.log(telefone)
     console.log(dataNascimento)
@@ -175,8 +191,7 @@ function CadastroVenda() {
                 aria-describedby="emailHelp123" 
                 placeholder="Endereço"
                 type="date" 
-                value={dataNascimento
-                  }
+                value={dataNascimento}
                 onChange={e => setDataNascimento(e.target.value)} 
                 disabled={disableInputUser}     
               />
@@ -212,8 +227,8 @@ function CadastroVenda() {
 
             <div className="grid grid-cols-1 gap-4">
               <div className="form-group mb-6">
-                <select id="Lojas"   onChange={e => setIdLoja(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-600  focus:border-blue-600  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-600  dark:focus:border-blue-600 ">
-                  <option  value={"DEFAULT"} selected>Selecionaee a loja</option>
+                <select id="Lojas" onChange={e => handleSelectLoja(e.target)} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-600  focus:border-blue-600  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-600  dark:focus:border-blue-600 ">
+                  <option  value={"DEFAULT"} >Selecione a loja</option>
                     {lojaList.map((loja) => ( 
                       <option key={loja.id}  value={loja.id}>{loja.loja_nome}</option>
                     ))}
