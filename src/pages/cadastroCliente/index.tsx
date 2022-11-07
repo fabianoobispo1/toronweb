@@ -10,11 +10,7 @@ import Navbar from '../../components/Navbar';
 
 function CadastroLoja() {
   const [nome, setNome] = useState("");
-  const [sigla, setSigla] = useState("");
-  const [endereco, setEndereco] = useState("");
   const [telefone, setTelefone] = useState("");
-
-
   const [dataNascimento, setDataNascimento] = useState("");
 
 
@@ -50,6 +46,7 @@ function CadastroLoja() {
       api.get('/clienteslist')
       .then(({ data }) => {
         setLoading(true)
+        console.log(data)
         setClienteList(data.resultClientes)
       })
         .catch(console.error);
